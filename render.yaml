@@ -3,7 +3,7 @@ services:
     name: ai-travel-planner
     plan: free
     env: python
-    buildCommand: "cd backend && pip install -r requirements.txt && alembic upgrade head"
+    buildCommand: "cd backend && pip install -r requirements.txt"
     startCommand: "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: PYTHON_VERSION
@@ -12,7 +12,9 @@ services:
         value: /opt/render/project/src
       - key: SECRET_KEY
         value: b29a7c3f8e4d156a9b4d8c7e2f1a3b5c6d9e8f7a4b1c2d3e5f6a7b8c9d0e1f2
-      - key: ALLOWED_ORIGINS
-        value: https://ai-travel-planner-puce-three.vercel.app
+      - key: CORS_ORIGINS
+        value: https://ai-travel-planner-puce-three.vercel.app,http://localhost:5173
+      - key: ENVIRONMENT
+        value: production
       - key: DATABASE_URL
         sync: false

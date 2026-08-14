@@ -1,4 +1,14 @@
+import os
+import sys
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
+
+# Add project root to sys.path to allow importing the `ai` module
+# Works on both Windows (local dev) and Linux (Render)
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
 from app.api.deps import get_db
 from app.core.config import settings
 from app.middleware.cors import add_middlewares
@@ -7,10 +17,18 @@ from app.api.routes import auth, users, trips, itinerary, assistant, budget, map
 from app.db.session import engine
 from app.db.base import Base
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Create all tables if they don't exist (idempotent — safe for both SQLite and PostgreSQL)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     description="Backend API for TripWise AI - AI Travel Planning Platform",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 # Add middlewares
@@ -29,10 +47,3 @@ app.include_router(assistant.router, prefix="/api/trips", tags=["AI"])
 app.include_router(budget.router, prefix="/api/trips", tags=["Budget"])
 app.include_router(maps.router, prefix="/api/places", tags=["Places"])
 app.include_router(sharing.router, prefix="/api/share", tags=["Share"])
-
-@app.on_event("startup")
-async def startup_event():
-    # Only for SQLite development - in prod use Alembic
-    if settings.DATABASE_URL.startswith("sqlite"):
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
