@@ -226,30 +226,48 @@ When the backend is running, visit:
 
 ---
 
-## 🚢 Deployment
+## 🚢 Deployment (Production Guide)
 
-### Frontend (Vercel)
-```bash
-cd frontend
-npm run build
-# Deploy dist/ to Vercel
-```
+TripWise AI is designed to be deployed across a modern cloud-native stack: Supabase (Database), Render (Backend), and Vercel (Frontend).
 
-### Backend (Railway / Render / Fly.io)
-```bash
-cd backend
-# Set environment variables on hosting platform
-# Deploy with Dockerfile or direct Python deployment
-```
+### 1. Database Setup (Supabase)
+1. Create an account and project on [Supabase](https://supabase.com).
+2. Go to Project Settings -> Database to find your connection string.
+3. Your database URL will look like: `postgresql+asyncpg://postgres.[project-id]:[password]@aws-0-[region].pooler.supabase.com:5432/postgres`
+
+### 2. Backend Deployment (Render)
+1. Create a [Render](https://render.com) account.
+2. Click **New +** and select **Web Service**.
+3. Connect your GitHub repository.
+4. Use the following settings:
+   - **Environment:** `Python 3`
+   - **Build Command:** `pip install -r requirements.txt && alembic upgrade head`
+   - **Start Command:** `cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+5. Add the following **Environment Variables**:
+   - `DATABASE_URL`: Your Supabase connection string.
+   - `JWT_SECRET_KEY`: A secure random string (e.g., generated via `openssl rand -hex 32`).
+   - `CORS_ORIGINS`: Your Vercel frontend URL (e.g., `https://ai-travel-planner-[hash].vercel.app`).
+   - `FRONTEND_URL`: Same as above.
+   - `AI_API_KEY`: Your Gemini/OpenAI API key.
+   - `AI_PROVIDER`: `gemini` (or `openai`).
+   - `APP_ENV`: `production`
+
+### 3. Frontend Deployment (Vercel)
+1. Create a [Vercel](https://vercel.com) account.
+2. Click **Add New... -> Project** and import your GitHub repository.
+3. Ensure the Framework Preset is set to **Vite**.
+4. Set the Build Command to `npm run build` and Output Directory to `dist` (default).
+5. Add the following **Environment Variables**:
+   - `VITE_API_URL`: Your Render backend URL (e.g., `https://ai-travel-planner-xxxx.onrender.com/api`).
+6. Click **Deploy**.
 
 ### Production Checklist
-- [ ] Set strong `JWT_SECRET_KEY`
-- [ ] Configure PostgreSQL `DATABASE_URL`
-- [ ] Set `AI_API_KEY` for your AI provider
-- [ ] Configure `CORS_ORIGINS` for production domains
-- [ ] Enable HTTPS
-- [ ] Run `alembic upgrade head` for migrations
-- [ ] Set `APP_ENV=production`
+- [x] Configure PostgreSQL `DATABASE_URL` with `asyncpg` scheme.
+- [x] Run `alembic upgrade head` during the Render build step.
+- [x] Set strong `JWT_SECRET_KEY` on Render.
+- [x] Set `VITE_API_URL` pointing to the Render backend on Vercel.
+- [x] Configure `CORS_ORIGINS` on Render to allow Vercel domain.
+- [x] Test production user registration and login flows.
 
 ---
 
