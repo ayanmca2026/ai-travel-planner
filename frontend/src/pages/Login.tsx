@@ -5,17 +5,39 @@ import { Mail, Lock } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth.store';
 import toast from 'react-hot-toast';
+import { useState } from 'react';
+import { authService } from '@/api/auth.api';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const login = useAuthStore(state => state.login);
+  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock login
-    login({ id: '1', email: 'student@example.com', name: 'Student' }, 'fake-token');
-    toast.success('Welcome back!');
-    navigate('/dashboard');
+    setIsLoading(true);
+    try {
+      const response = await authService.login({ email, password });
+      // Depending on API, response might be the token or object containing token
+      const token = (response as any).access_token || (response as any).token;
+      if (!token) throw new Error("No token received");
+      
+      // We don't get the user from login (it's OAuth2), we just get the token.
+      // So we store the token and call initialize to fetch the user.
+      localStorage.setItem('token', token);
+      const initialize = useAuthStore.getState().initialize;
+      await initialize();
+      
+      toast.success('Welcome back!');
+      navigate('/dashboard');
+    } catch (error: any) {
+      console.error(error);
+      const msg = error.response?.status === 401 ? 'Invalid email or password.' : 'Failed to login. Please try again.';
+      toast.error(msg);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -29,6 +51,8 @@ export default function LoginPage() {
           type="email" 
           placeholder="you@example.com"
           icon={<Mail className="h-4 w-4" />}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
         <div>
@@ -37,6 +61,8 @@ export default function LoginPage() {
             type="password" 
             placeholder="••••••••"
             icon={<Lock className="h-4 w-4" />}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
           <div className="flex justify-end mt-1">
@@ -44,7 +70,9 @@ export default function LoginPage() {
           </div>
         </div>
         
-        <Button type="submit" className="w-full mt-6">Sign In</Button>
+        <Button type="submit" className="w-full mt-6" disabled={isLoading}>
+          {isLoading ? 'Signing in...' : 'Sign In'}
+        </Button>
       </form>
       
       <div className="mt-8 text-center text-sm text-slate-500">

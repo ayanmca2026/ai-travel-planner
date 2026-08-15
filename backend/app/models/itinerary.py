@@ -1,4 +1,5 @@
 import datetime
+from datetime import timezone
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Enum, Date
 from sqlalchemy.orm import relationship
 from app.db.session import Base
@@ -24,7 +25,7 @@ class ItineraryDay(Base):
     theme = Column(String, nullable=True)
     notes = Column(String, nullable=True)
     total_estimated_cost = Column(Float, default=0.0)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
     
     trip = relationship("Trip", back_populates="itinerary_days")
     items = relationship("ItineraryItem", back_populates="day", cascade="all, delete-orphan")
@@ -59,6 +60,6 @@ class ItineraryItem(Base):
     tips = Column(String, nullable=True)
     sort_order = Column(Integer, default=0)
     
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
     
     day = relationship("ItineraryDay", back_populates="items")

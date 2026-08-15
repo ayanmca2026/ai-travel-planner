@@ -5,7 +5,7 @@ from app.api.deps import get_db, get_current_active_user
 from app.models.user import User
 from app.schemas.common import SuccessResponse, PaginatedResponse
 from app.services.maps_service import PlaceService
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 router = APIRouter()
 
@@ -34,8 +34,7 @@ class DestinationResponse(BaseModel):
     avg_daily_budget_inr: Optional[float]
     best_months: List[str]
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class SavedPlaceResponse(BaseModel):
     id: int
@@ -48,8 +47,7 @@ class SavedPlaceResponse(BaseModel):
     image_url: Optional[str]
     notes: Optional[str]
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 @router.get("/destinations", response_model=SuccessResponse[PaginatedResponse[DestinationResponse]])
 async def list_destinations(page: int = 1, limit: int = 20, db: AsyncSession = Depends(get_db)):

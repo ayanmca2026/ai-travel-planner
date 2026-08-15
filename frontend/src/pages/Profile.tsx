@@ -5,11 +5,63 @@ import { Input } from '@/components/common/Input';
 import { Avatar } from '@/components/common/Avatar';
 import { MapPin, Mail, Navigation, Heart, Edit2 } from 'lucide-react';
 import { Chip } from '@/components/common/Chip';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { userService } from '@/api/user.api';
+import toast from 'react-hot-toast';
 
 export default function ProfilePage() {
-  const { user } = useAuthStore();
+  const { user, updateUser } = useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [profile, setProfile] = useState<any>(null);
+  const [formData, setFormData] = useState({
+    full_name: user?.full_name || user?.name || '',
+    home_city: '',
+    student_id: ''
+  });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await userService.getProfile();
+        const p = (response as any).data || response;
+        setProfile(p);
+        setFormData(prev => ({
+          ...prev,
+          home_city: p.home_city || '',
+          student_id: p.student_id || ''
+        }));
+      } catch (error) {
+        console.error('Failed to fetch profile', error);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  const handleSave = async () => {
+    if (!isEditing) {
+      setIsEditing(true);
+      return;
+    }
+    
+    setIsSaving(true);
+    try {
+      await userService.updateProfile({
+        full_name: formData.full_name,
+        home_city: formData.home_city,
+        student_id: formData.student_id
+      });
+      // Also update auth store user
+      updateUser({ full_name: formData.full_name, name: formData.full_name });
+      toast.success('Profile updated successfully');
+      setIsEditing(false);
+    } catch (error) {
+      toast.error('Failed to update profile');
+      console.error(error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto pb-20">
@@ -18,18 +70,18 @@ export default function ProfilePage() {
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Profile</h1>
           <p className="text-slate-500 mt-2">Manage your personal information and preferences.</p>
         </div>
-        <Button variant={isEditing ? 'primary' : 'outline'} onClick={() => setIsEditing(!isEditing)}>
-          {isEditing ? 'Save Changes' : <><Edit2 className="w-4 h-4 mr-2" /> Edit Profile</>}
+        <Button variant={isEditing ? 'primary' : 'outline'} onClick={handleSave} disabled={isSaving}>
+          {isSaving ? 'Saving...' : isEditing ? 'Save Changes' : <><Edit2 className="w-4 h-4 mr-2" /> Edit Profile</>}
         </Button>
       </div>
 
       <div className="grid md:grid-cols-3 gap-8">
         <div className="md:col-span-1 space-y-6">
           <Card className="flex flex-col items-center text-center p-8">
-            <Avatar size="xl" initials={user?.name} className="mb-4 text-3xl font-bold w-24 h-24" />
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">{user?.name || 'Traveler'}</h2>
+            <Avatar size="xl" initials={user?.full_name || user?.name} className="mb-4 text-3xl font-bold w-24 h-24" />
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">{user?.full_name || user?.name || 'Traveler'}</h2>
             <p className="text-sm text-slate-500 mb-6 flex items-center justify-center gap-1">
-              <Mail className="w-4 h-4" /> {user?.email || 'traveler@student.edu'}
+              <Mail className="w-4 h-4" /> {user?.email}
             </p>
             
             <div className="w-full grid grid-cols-2 gap-4 border-t border-slate-100 dark:border-slate-800 pt-6">
@@ -49,9 +101,10 @@ export default function ProfilePage() {
           <Card>
             <h3 className="text-lg font-bold mb-6">Personal Information</h3>
             <div className="space-y-4">
-              <Input label="Full Name" defaultValue={user?.name} disabled={!isEditing} />
-              <Input label="Email Address" defaultValue={user?.email} disabled={true} />
-              <Input label="Home City" defaultValue="New Delhi, India" disabled={!isEditing} icon={<MapPin className="w-4 h-4" />} />
+              <Input label="Full Name" value={formData.full_name} onChange={(e) => setFormData({...formData, full_name: e.target.value})} disabled={!isEditing} />
+              <Input label="Email Address" value={user?.email || ''} disabled={true} />
+              <Input label="Student ID" value={formData.student_id} onChange={(e) => setFormData({...formData, student_id: e.target.value})} disabled={!isEditing} placeholder="e.g. S12345678" />
+              <Input label="Home City" value={formData.home_city} onChange={(e) => setFormData({...formData, home_city: e.target.value})} disabled={!isEditing} icon={<MapPin className="w-4 h-4" />} />
             </div>
           </Card>
           

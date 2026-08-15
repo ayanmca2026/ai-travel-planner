@@ -1,4 +1,5 @@
 import datetime
+from datetime import timezone
 import uuid
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, JSON, Enum, Date
 from sqlalchemy.orm import relationship
@@ -47,8 +48,8 @@ class Trip(Base):
     share_id = Column(String, unique=True, default=lambda: str(uuid.uuid4()))
     cover_image = Column(String, nullable=True)
     
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc), onupdate=lambda: datetime.datetime.now(timezone.utc))
     
     user = relationship("User", back_populates="trips")
     itinerary_days = relationship("ItineraryDay", back_populates="trip", cascade="all, delete-orphan")

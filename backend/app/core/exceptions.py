@@ -22,7 +22,7 @@ class NotFoundError(AppException):
 
 class ValidationError(AppException):
     def __init__(self, message: str = "Validation error"):
-        super().__init__(message, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        super().__init__(message, status_code=status.HTTP_422_UNPROCESSABLE_CONTENT)
 
 class AIServiceError(AppException):
     def __init__(self, message: str = "AI Service error"):
@@ -44,7 +44,7 @@ def add_exception_handlers(app):
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(request: Request, exc: RequestValidationError):
         return JSONResponse(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             content={"success": False, "error": "Validation Error", "details": exc.errors()}
         )
 

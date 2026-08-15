@@ -1,4 +1,5 @@
 import datetime
+from datetime import timezone
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, JSON
 from sqlalchemy.orm import relationship
 from app.db.session import Base
@@ -13,8 +14,8 @@ class User(Base):
     avatar_url = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc), onupdate=lambda: datetime.datetime.now(timezone.utc))
     
     profile = relationship("UserProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
     trips = relationship("Trip", back_populates="user", cascade="all, delete-orphan")
@@ -31,7 +32,10 @@ class UserProfile(Base):
     travel_styles = Column(JSON, default=list)
     interests = Column(JSON, default=list)
     dietary_restrictions = Column(JSON, default=list)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    student_id = Column(String, nullable=True)
+    theme = Column(String, default="system")
+    notifications_enabled = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc), onupdate=lambda: datetime.datetime.now(timezone.utc))
     
     user = relationship("User", back_populates="profile")

@@ -26,3 +26,9 @@ async def get_profile(current_user: User = Depends(get_current_active_user), db:
 async def update_profile(update_data: UserProfileUpdate, current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_db)):
     profile = await UserService.update_profile(db, current_user.id, update_data)
     return SuccessResponse(data=profile, message="Preferences updated")
+
+@router.delete("/me", response_model=SuccessResponse)
+async def delete_me(current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_db)):
+    await UserService.delete_user(db, current_user)
+    return SuccessResponse(message="Account deleted successfully")
+

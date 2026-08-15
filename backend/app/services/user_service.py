@@ -31,6 +31,15 @@ class UserService:
     @staticmethod
     async def update_user(db: AsyncSession, user: User, update_data: UserProfileUpdate) -> User:
         await UserService.update_profile(db, user.id, update_data)
-        stmt = select(User).where(User.id == user.id)
-        result = await db.execute(stmt)
-        return result.scalar_one()
+        if update_data.full_name is not None:
+            user.full_name = update_data.full_name
+            db.add(user)
+            await db.commit()
+            await db.refresh(user)
+        return user
+
+    @staticmethod
+    async def delete_user(db: AsyncSession, user: User) -> None:
+        await db.delete(user)
+        await db.commit()
+

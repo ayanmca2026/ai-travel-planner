@@ -5,10 +5,16 @@ import { User, Mail, Lock, ShieldCheck } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { authService } from '@/api/auth.api';
+import { useAuthStore } from '@/store/auth.store';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const getStrength = (pass: string) => {
     let score = 0;
@@ -22,10 +28,40 @@ export default function RegisterPage() {
   const strength = getStrength(password);
   const strengthColors = ['bg-slate-200', 'bg-danger-500', 'bg-warning-500', 'bg-primary-500', 'bg-success-500'];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success('Account created successfully!');
-    navigate('/login');
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      await authService.register({ full_name: name, email, password });
+      
+      // Auto-login after successful registration
+      const response = await authService.login({ email, password });
+      const token = (response as any).access_token || (response as any).token;
+      
+      if (token) {
+        localStorage.setItem('token', token);
+        const initialize = useAuthStore.getState().initialize;
+        await initialize();
+        toast.success('Account created successfully!');
+        navigate('/dashboard');
+      } else {
+        toast.success('Account created! Please log in.');
+        navigate('/login');
+      }
+    } catch (error: any) {
+      console.error(error);
+      const msg = error.response?.status === 409 
+        ? 'Email already registered.' 
+        : 'Failed to create account. Please try again.';
+      toast.error(msg);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -39,13 +75,17 @@ export default function RegisterPage() {
           type="text" 
           placeholder="Alex Johnson"
           icon={<User className="h-4 w-4" />}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
         />
         <Input 
           label="Email Address" 
           type="email" 
-          placeholder="alex@student.edu"
+          placeholder="alex@example.com"
           icon={<Mail className="h-4 w-4" />}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
         <div>
@@ -74,6 +114,8 @@ export default function RegisterPage() {
           type="password" 
           placeholder="••••••••"
           icon={<ShieldCheck className="h-4 w-4" />}
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           required
         />
         
@@ -84,7 +126,9 @@ export default function RegisterPage() {
           </label>
         </div>
         
-        <Button type="submit" className="w-full">Create Free Account</Button>
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? 'Creating Account...' : 'Create Free Account'}
+        </Button>
       </form>
       
       <div className="mt-6 text-center text-sm text-slate-500">

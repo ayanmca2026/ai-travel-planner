@@ -1,4 +1,5 @@
 import datetime
+from datetime import timezone
 import enum
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, JSON, Enum
 from sqlalchemy.orm import relationship
@@ -23,6 +24,6 @@ class Recommendation(Base):
     suggested_cost = Column(Float, nullable=True)
     savings = Column(Float, nullable=True)
     metadata_ = Column("metadata", JSON, default=dict)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
     
     trip = relationship("Trip", back_populates="recommendations")

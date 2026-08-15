@@ -1,4 +1,5 @@
 import datetime
+from datetime import timezone
 import enum
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum
 from sqlalchemy.orm import relationship
@@ -22,4 +23,4 @@ class AIGeneration(Base):
     duration_ms = Column(Integer, nullable=True)
     status = Column(Enum(GenerationStatus), default=GenerationStatus.PENDING)
     error_message = Column(String, nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))

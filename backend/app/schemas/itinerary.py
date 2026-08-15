@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from app.models.itinerary import PlaceCategory
 
 class ItineraryItemBase(BaseModel):
@@ -26,8 +26,7 @@ class ItineraryItemResponse(ItineraryItemBase):
     day_id: int
     sort_order: int
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ItineraryDayResponse(BaseModel):
     id: int
@@ -39,8 +38,7 @@ class ItineraryDayResponse(BaseModel):
     total_estimated_cost: float
     items: List[ItineraryItemResponse] = []
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class FullItineraryResponse(BaseModel):
     trip_id: int

@@ -7,9 +7,13 @@ import { Menu, Bell, Search, Sun, Moon } from 'lucide-react';
 import { useUiStore } from '@/store/ui.store';
 
 export default function AppLayout() {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, isInitialized } = useAuthStore();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { theme, setTheme } = useUiStore();
+
+  if (!isInitialized) {
+    return <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950"><div className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div></div>;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

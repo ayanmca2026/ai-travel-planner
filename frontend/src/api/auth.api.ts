@@ -3,7 +3,14 @@ import { User, AuthResponse } from '@/types/auth';
 
 export const authService = {
   login: async (credentials: any): Promise<AuthResponse> => {
-    const { data } = await api.post('/auth/login', credentials);
+    // OAuth2PasswordRequestForm expects x-www-form-urlencoded
+    const formData = new URLSearchParams();
+    formData.append('username', credentials.email);
+    formData.append('password', credentials.password);
+    
+    const { data } = await api.post('/auth/login', formData, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
     return data;
   },
   
@@ -13,11 +20,15 @@ export const authService = {
   },
   
   logout: async (): Promise<void> => {
-    await api.post('/auth/logout');
+    try {
+      await api.post('/auth/logout');
+    } catch (e) {
+      // Ignore errors on logout
+    }
   },
   
   getCurrentUser: async (): Promise<User> => {
-    const { data } = await api.get('/auth/me');
+    const { data } = await api.get('/users/me');
     return data;
   },
   
