@@ -1,4 +1,4 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+export const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://ai-travel-planner-olui.onrender.com/api' : 'http://localhost:8000/api');
 
 export const TRAVEL_STYLES = [
   { id: 'backpacker', label: 'Backpacker', desc: 'Hostels, street food, public transport', icon: '🎒' },
