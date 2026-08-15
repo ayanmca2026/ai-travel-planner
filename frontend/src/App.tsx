@@ -25,13 +25,23 @@ import AIPlanningLoader from './components/ai/AIPlanningLoader';
 
 import { useEffect } from 'react';
 import { useAuthStore } from './store/auth.store';
+import { useUiStore } from './store/ui.store';
 
 function App() {
   const initialize = useAuthStore(state => state.initialize);
+  const theme = useUiStore(state => state.theme);
   
   useEffect(() => {
     initialize();
   }, [initialize]);
+
+  useEffect(() => {
+    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
   return (
     <Routes>
