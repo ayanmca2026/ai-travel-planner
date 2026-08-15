@@ -21,6 +21,15 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        full_name: user.full_name || user.name || prev.full_name
+      }));
+    }
+  }, [user]);
+
+  useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await userService.getProfile();
@@ -46,7 +55,7 @@ export default function ProfilePage() {
     
     setIsSaving(true);
     try {
-      await userService.updateProfile({
+      await userService.updateUser({
         full_name: formData.full_name,
         home_city: formData.home_city,
         student_id: formData.student_id

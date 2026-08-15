@@ -55,9 +55,8 @@ export default function RegisterPage() {
       }
     } catch (error: any) {
       console.error(error);
-      const msg = error.response?.status === 409 
-        ? 'Email already registered.' 
-        : 'Failed to create account. Please try again.';
+      const serverMsg = error.response?.data?.error || error.response?.data?.detail;
+      const msg = serverMsg || (error.response?.status === 409 ? 'Email already registered.' : 'Failed to create account. Please try again.');
       toast.error(msg);
     } finally {
       setIsLoading(false);

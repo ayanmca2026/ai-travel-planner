@@ -33,7 +33,8 @@ export default function LoginPage() {
       navigate('/dashboard');
     } catch (error: any) {
       console.error(error);
-      const msg = error.response?.status === 401 ? 'Invalid email or password.' : 'Failed to login. Please try again.';
+      const serverMsg = error.response?.data?.error || error.response?.data?.detail;
+      const msg = serverMsg || (error.response?.status === 401 ? 'Invalid email or password.' : 'Failed to login. Please try again.');
       toast.error(msg);
     } finally {
       setIsLoading(false);

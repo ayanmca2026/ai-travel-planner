@@ -48,7 +48,7 @@ export default function AppLayout() {
               <span className="absolute top-1 right-1 w-2 h-2 bg-danger-500 rounded-full"></span>
             </button>
             <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-primary-700 dark:text-primary-400 font-bold text-sm border border-primary-200 dark:border-primary-800 cursor-pointer">
-              {user?.name?.charAt(0) || 'U'}
+              {(user?.full_name || user?.name || user?.email || 'U').charAt(0).toUpperCase()}
             </div>
           </div>
         </header>

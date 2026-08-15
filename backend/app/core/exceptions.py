@@ -24,6 +24,10 @@ class ValidationError(AppException):
     def __init__(self, message: str = "Validation error"):
         super().__init__(message, status_code=status.HTTP_422_UNPROCESSABLE_CONTENT)
 
+class DuplicateError(AppException):
+    def __init__(self, message: str = "Resource already exists"):
+        super().__init__(message, status_code=status.HTTP_409_CONFLICT)
+
 class AIServiceError(AppException):
     def __init__(self, message: str = "AI Service error"):
         super().__init__(message, status_code=status.HTTP_502_BAD_GATEWAY)
