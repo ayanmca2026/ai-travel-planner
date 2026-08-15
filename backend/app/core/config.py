@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str | None = None
     MAPS_API_KEY: str | None = None
     
-    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173"
+    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173,https://ai-travel-planner-puce-three.vercel.app"
     RATE_LIMIT_PER_MINUTE: int = 60
     
     model_config = SettingsConfigDict(
