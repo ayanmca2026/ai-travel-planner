@@ -53,7 +53,6 @@ async def root():
         "description": "AI-powered student travel planning backend",
         "status": "online",
         "version": "1.0.0",
-        "frontend": "https://ai-travel-planner-puce-three.vercel.app",
         "health": "/api/health",
         "docs": "/docs",
         "redoc": "/redoc",
