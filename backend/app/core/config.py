@@ -38,6 +38,11 @@ class Settings(BaseSettings):
             url = url.replace("postgres://", "postgresql+asyncpg://", 1)
         elif url.startswith("postgresql://") and not url.startswith("postgresql+asyncpg://"):
             url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        
+        # Supabase and Render Postgres require SSL for external connections
+        if "postgresql+asyncpg://" in url and "?" not in url:
+            url += "?ssl=require"
+            
         return url
 
 settings = Settings()
