@@ -19,6 +19,6 @@ class ChatMessage(Base):
     role = Column(Enum(ChatRole), nullable=False)
     content = Column(String, nullable=False)
     metadata_ = Column("metadata", JSON, default=dict)
-    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.datetime.utcnow())
     
     trip = relationship("Trip", back_populates="chat_messages")

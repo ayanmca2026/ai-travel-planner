@@ -24,6 +24,6 @@ class Recommendation(Base):
     suggested_cost = Column(Float, nullable=True)
     savings = Column(Float, nullable=True)
     metadata_ = Column("metadata", JSON, default=dict)
-    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.datetime.utcnow())
     
     trip = relationship("Trip", back_populates="recommendations")

@@ -17,7 +17,7 @@ class SavedPlace(Base):
     rating = Column(Float, nullable=True)
     image_url = Column(String, nullable=True)
     notes = Column(String, nullable=True)
-    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.datetime.utcnow())
     
     user = relationship("User", back_populates="saved_places")
 
@@ -38,4 +38,4 @@ class Destination(Base):
     tags = Column(JSON, default=list)
     avg_daily_budget_inr = Column(Float, nullable=True)
     best_months = Column(JSON, default=list)
-    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.datetime.utcnow())

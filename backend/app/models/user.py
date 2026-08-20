@@ -14,8 +14,8 @@ class User(Base):
     avatar_url = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
-    updated_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc), onupdate=lambda: datetime.datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.datetime.utcnow())
+    updated_at = Column(DateTime, default=lambda: datetime.datetime.utcnow(), onupdate=lambda: datetime.datetime.utcnow())
     
     profile = relationship("UserProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
     trips = relationship("Trip", back_populates="user", cascade="all, delete-orphan")
@@ -35,7 +35,7 @@ class UserProfile(Base):
     student_id = Column(String, nullable=True)
     theme = Column(String, default="system")
     notifications_enabled = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
-    updated_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc), onupdate=lambda: datetime.datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.datetime.utcnow())
+    updated_at = Column(DateTime, default=lambda: datetime.datetime.utcnow(), onupdate=lambda: datetime.datetime.utcnow())
     
     user = relationship("User", back_populates="profile")

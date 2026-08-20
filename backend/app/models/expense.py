@@ -15,6 +15,6 @@ class Expense(Base):
     category = Column(String, nullable=False)
     date = Column(Date, nullable=False)
     notes = Column(String, nullable=True)
-    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.datetime.utcnow())
     
     trip = relationship("Trip", back_populates="expenses")

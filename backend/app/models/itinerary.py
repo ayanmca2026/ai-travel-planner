@@ -25,7 +25,7 @@ class ItineraryDay(Base):
     theme = Column(String, nullable=True)
     notes = Column(String, nullable=True)
     total_estimated_cost = Column(Float, default=0.0)
-    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.datetime.utcnow())
     
     trip = relationship("Trip", back_populates="itinerary_days")
     items = relationship("ItineraryItem", back_populates="day", cascade="all, delete-orphan")
@@ -60,6 +60,6 @@ class ItineraryItem(Base):
     tips = Column(String, nullable=True)
     sort_order = Column(Integer, default=0)
     
-    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.datetime.utcnow())
     
     day = relationship("ItineraryDay", back_populates="items")

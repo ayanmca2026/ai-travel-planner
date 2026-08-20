@@ -48,8 +48,8 @@ class Trip(Base):
     share_id = Column(String, unique=True, default=lambda: str(uuid.uuid4()))
     cover_image = Column(String, nullable=True)
     
-    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
-    updated_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc), onupdate=lambda: datetime.datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.datetime.utcnow())
+    updated_at = Column(DateTime, default=lambda: datetime.datetime.utcnow(), onupdate=lambda: datetime.datetime.utcnow())
     
     user = relationship("User", back_populates="trips")
     itinerary_days = relationship("ItineraryDay", back_populates="trip", cascade="all, delete-orphan")
