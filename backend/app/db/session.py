@@ -9,7 +9,8 @@ engine_kwargs = {
 
 # Disable prepared statements caching when using PostgreSQL (especially Supabase/PgBouncer)
 if "postgresql" in settings.get_database_url or "postgres" in settings.get_database_url:
-    engine_kwargs["connect_args"] = {"prepared_statement_cache_size": 0}
+    engine_kwargs["prepared_statement_cache_size"] = 0
+    engine_kwargs["connect_args"] = {"statement_cache_size": 0}
 
 engine = create_async_engine(
     settings.get_database_url,
