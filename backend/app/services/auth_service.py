@@ -4,7 +4,7 @@ from jose import jwt, JWTError
 from app.models.user import User, UserProfile
 from app.schemas.auth import RegisterRequest, TokenResponse
 from app.core.security import get_password_hash, verify_password, create_access_token, create_refresh_token
-from app.core.exceptions import AuthenticationError, AppException
+from app.core.exceptions import AuthenticationError, AppException, DuplicateError
 from app.core.config import settings
 
 class AuthService:
@@ -13,17 +13,23 @@ class AuthService:
         stmt = select(User).where(User.email == request.email)
         result = await db.execute(stmt)
         if result.scalar_one_or_none():
-            raise AppException("Email already registered")
+            raise DuplicateError("Email already registered")
             
         hashed_password = get_password_hash(request.password)
         user = User(email=request.email, hashed_password=hashed_password, full_name=request.full_name)
-        db.add(user)
-        await db.commit()
-        await db.refresh(user)
         
-        profile = UserProfile(user_id=user.id)
-        db.add(profile)
-        await db.commit()
+        try:
+            db.add(user)
+            await db.flush()
+            
+            profile = UserProfile(user_id=user.id)
+            db.add(profile)
+            
+            await db.commit()
+            await db.refresh(user)
+        except Exception as e:
+            await db.rollback()
+            raise AppException("Database error occurred while creating account", status_code=500)
         
         access_token = create_access_token(user.id)
         refresh_token = create_refresh_token(user.id)

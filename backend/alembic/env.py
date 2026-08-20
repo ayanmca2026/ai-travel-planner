@@ -15,7 +15,7 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 def run_migrations_offline() -> None:
-    url = settings.DATABASE_URL
+    url = settings.get_database_url
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -32,8 +32,10 @@ def do_run_migrations(connection: Connection) -> None:
         context.run_migrations()
 
 async def run_async_migrations() -> None:
+    # Get SSL configuration from settings logic
+    url = settings.get_database_url
     connectable = create_async_engine(
-        settings.DATABASE_URL,
+        url,
         poolclass=pool.NullPool,
     )
     async with connectable.connect() as connection:

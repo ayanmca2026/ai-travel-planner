@@ -19,12 +19,7 @@ from app.db.base import Base
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Create all tables if they don't exist
-    try:
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-    except Exception as e:
-        print(f"Warning: Could not connect to database or create tables on startup: {e}")
+    # Database is managed by Alembic migrations
     yield
 
 app = FastAPI(

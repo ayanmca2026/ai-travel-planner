@@ -54,9 +54,25 @@ export default function RegisterPage() {
         navigate('/login');
       }
     } catch (error: any) {
-      console.error(error);
+      console.error("Registration failed:", error);
       const serverMsg = error.response?.data?.error || error.response?.data?.detail;
-      const msg = serverMsg || (error.response?.status === 409 ? 'Email already registered.' : 'Failed to create account. Please try again.');
+      
+      let msg = 'Failed to create account. Please try again.';
+      if (serverMsg) {
+        msg = typeof serverMsg === 'string' ? serverMsg : JSON.stringify(serverMsg);
+      } else if (error.response?.status === 409) {
+        msg = 'Email already registered.';
+      } else if (error.response?.status === 401) {
+        msg = 'Invalid email or password.';
+      } else if (error.response?.status === 422) {
+        msg = 'Please check the submitted fields.';
+      } else if (error.response?.status === 500) {
+        msg = 'Database error occurred';
+      } else if (error.response?.status === 502 || error.response?.status === 503) {
+        msg = 'Server/database error. Please try again.';
+      } else if (!error.response) {
+        msg = 'Unable to connect to TripWise API.';
+      }
       toast.error(msg);
     } finally {
       setIsLoading(false);
