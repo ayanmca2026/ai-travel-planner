@@ -37,8 +37,8 @@ async def run_async_migrations() -> None:
     engine_kwargs = {
         "poolclass": pool.NullPool,
     }
-    # Disable prepared statements caching when using Supabase pooler (PgBouncer)
-    if "pooler.supabase.com" in url or "6543" in url:
+    # Disable prepared statements caching when using PostgreSQL (especially Supabase/PgBouncer)
+    if "postgresql" in url or "postgres" in url:
         engine_kwargs["connect_args"] = {"prepared_statement_cache_size": 0}
         
     connectable = create_async_engine(

@@ -7,8 +7,8 @@ engine_kwargs = {
     "future": True,
 }
 
-# Disable prepared statements caching when using Supabase pooler (PgBouncer)
-if "pooler.supabase.com" in settings.get_database_url or "6543" in settings.get_database_url:
+# Disable prepared statements caching when using PostgreSQL (especially Supabase/PgBouncer)
+if "postgresql" in settings.get_database_url or "postgres" in settings.get_database_url:
     engine_kwargs["connect_args"] = {"prepared_statement_cache_size": 0}
 
 engine = create_async_engine(
