@@ -39,7 +39,6 @@ async def run_async_migrations() -> None:
     }
     # Disable prepared statements caching when using PostgreSQL (especially Supabase/PgBouncer)
     if "postgresql" in url or "postgres" in url:
-        engine_kwargs["prepared_statement_cache_size"] = 0
         engine_kwargs["connect_args"] = {"statement_cache_size": 0}
         
     connectable = create_async_engine(
