@@ -1,4 +1,4 @@
-let rawApiUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://ai-travel-planner-olui.onrender.com' : 'http://localhost:8000');
+let rawApiUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://ai-travel-planner-7ric.onrender.com' : 'http://localhost:8000');
 rawApiUrl = rawApiUrl.replace(/\/+$/, '');
 rawApiUrl = rawApiUrl.replace(/\/api$/, '');
 rawApiUrl = rawApiUrl + '/api';
