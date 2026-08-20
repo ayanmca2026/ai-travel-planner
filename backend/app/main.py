@@ -19,9 +19,12 @@ from app.db.base import Base
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Create all tables if they don't exist (idempotent — safe for both SQLite and PostgreSQL)
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    # Create all tables if they don't exist
+    try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+    except Exception as e:
+        print(f"Warning: Could not connect to database or create tables on startup: {e}")
     yield
 
 app = FastAPI(
