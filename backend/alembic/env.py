@@ -34,9 +34,16 @@ def do_run_migrations(connection: Connection) -> None:
 async def run_async_migrations() -> None:
     # Get SSL configuration from settings logic
     url = settings.get_database_url
+    engine_kwargs = {
+        "poolclass": pool.NullPool,
+    }
+    # Disable prepared statements caching when using Supabase pooler (PgBouncer)
+    if "pooler.supabase.com" in url or "6543" in url:
+        engine_kwargs["connect_args"] = {"prepared_statement_cache_size": 0}
+        
     connectable = create_async_engine(
         url,
-        poolclass=pool.NullPool,
+        **engine_kwargs
     )
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)

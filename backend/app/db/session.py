@@ -2,10 +2,18 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 from sqlalchemy.orm import declarative_base
 from app.core.config import settings
 
+engine_kwargs = {
+    "echo": settings.ENVIRONMENT == "development",
+    "future": True,
+}
+
+# Disable prepared statements caching when using Supabase pooler (PgBouncer)
+if "pooler.supabase.com" in settings.get_database_url or "6543" in settings.get_database_url:
+    engine_kwargs["connect_args"] = {"prepared_statement_cache_size": 0}
+
 engine = create_async_engine(
     settings.get_database_url,
-    echo=settings.ENVIRONMENT == "development",
-    future=True,
+    **engine_kwargs
 )
 
 async_session_maker = async_sessionmaker(
