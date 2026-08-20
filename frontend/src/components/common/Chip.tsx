@@ -18,8 +18,8 @@ export function Chip({ label, active, onClick, onRemove, icon, className }: Chip
       className={cn(
         "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors border",
         active 
-          ? "bg-primary-500 border-primary-500 text-white shadow-sm" 
-          : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700",
+          ? "bg-[#6366F1] border-[#6366F1] text-white shadow-sm" 
+          : "bg-surface-soft dark:bg-surface border-border text-text-primary hover:bg-slate-50 dark:hover:bg-surface-hover",
         !onClick && !onRemove && "cursor-default",
         className
       )}

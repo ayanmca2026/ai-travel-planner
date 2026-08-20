@@ -11,10 +11,10 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     const baseStyles = 'rounded-xl overflow-hidden';
     
     const variants = {
-      default: 'bg-white dark:bg-surface border border-slate-200 dark:border-slate-700',
-      glass: 'glass-card',
-      elevated: 'bg-white dark:bg-surface shadow-lg border border-slate-100 dark:border-slate-800',
-      outlined: 'border-2 border-slate-200 dark:border-slate-700 bg-transparent',
+      default: 'bg-surface border border-border text-text-primary',
+      glass: 'glass-card text-text-primary',
+      elevated: 'bg-surface border border-border text-text-primary shadow-[0_8px_30px_rgba(15,23,42,0.08)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.28)]',
+      outlined: 'border-2 border-border bg-transparent text-text-primary',
     };
 
     const paddings = {

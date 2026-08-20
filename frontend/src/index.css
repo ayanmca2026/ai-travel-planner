@@ -1,37 +1,66 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-50: #eef2ff;
-  --color-primary-100: #e0e7ff;
-  --color-primary-500: #6366f1;
-  --color-primary-600: #4f46e5;
-  --color-primary-700: #4338ca;
+  --color-primary-50: #EEF2FF;
+  --color-primary-100: #E0E7FF;
+  --color-primary-500: #6366F1;
+  --color-primary-600: #4F46E5;
+  --color-primary-700: #4338CA;
   
-  --color-accent-500: #f97316;
-  --color-accent-600: #ea580c;
+  --color-background: var(--background);
+  --color-sidebar: var(--sidebar);
+  --color-header: var(--header);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-soft: var(--surface-soft);
+  --color-border: var(--border);
   
-  --color-success-500: #10b981;
-  --color-warning-500: #f59e0b;
-  --color-danger-500: #ef4444;
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-disabled: var(--text-disabled);
+
+  --color-accent-500: #F97316;
+  --color-accent-600: #EA580C;
+  --color-success-500: #10B981;
+  --color-warning-500: #F59E0B;
+  --color-danger-500: #EF4444;
 
   --font-sans: "Inter", sans-serif;
 }
 
 @layer base {
   :root {
-    --background: #ffffff;
-    --foreground: #0f172a;
-    --surface: #f8fafc;
+    --background: #F8FAFC;
+    --sidebar: #FFFFFF;
+    --header: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface-hover: #F1F5F9;
+    --surface-soft: #F8FAFC;
+    --border: #E2E8F0;
+    --foreground: #0F172A;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #64748B;
+    --text-disabled: #94A3B8;
     --surface-glass: rgba(255, 255, 255, 0.7);
-    --border: #e2e8f0;
   }
 
   .dark {
-    --background: #0f172a;
-    --foreground: #f8fafc;
-    --surface: #1e293b;
+    --background: #070B18;
+    --sidebar: #0D1428;
+    --header: #10182D;
+    --surface: #151E35;
+    --surface-hover: #1B2744;
+    --surface-soft: #111A30;
+    --border: #263452;
+    --foreground: #F8FAFC;
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-muted: #94A3B8;
+    --text-disabled: #64748B;
     --surface-glass: rgba(30, 41, 59, 0.7);
-    --border: #334155;
   }
 
   body {

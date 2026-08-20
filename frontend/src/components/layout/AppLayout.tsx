@@ -20,19 +20,19 @@ export default function AppLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors duration-200">
+    <div className="min-h-screen bg-background flex transition-colors duration-200">
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       
       <div className="flex-1 flex flex-col min-w-0 pb-16 md:pb-0">
-        <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 sticky top-0 z-40 shadow-sm">
+        <header className="h-16 bg-white dark:bg-header border-b border-slate-200 dark:border-border flex items-center justify-between px-4 sticky top-0 z-40 shadow-sm">
           <div className="flex items-center gap-4">
             <button className="md:hidden p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg" onClick={() => setIsSidebarOpen(true)}>
               <Menu className="w-5 h-5" />
             </button>
-            <div className="hidden sm:flex items-center px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500 text-sm w-64 border border-transparent focus-within:border-primary-500 focus-within:bg-white dark:focus-within:bg-slate-900">
-              <Search className="w-4 h-4 mr-2 text-slate-400" />
-              <input type="text" placeholder="Search trips, places..." className="bg-transparent border-none outline-none w-full dark:text-white" />
-              <span className="text-xs bg-slate-200 dark:bg-slate-700 px-1.5 rounded ml-2 text-slate-500 dark:text-slate-300">⌘K</span>
+            <div className="hidden sm:flex items-center px-3 py-1.5 bg-surface-soft dark:bg-surface rounded-lg text-text-primary text-sm w-64 border border-transparent focus-within:border-primary-500 focus-within:bg-white dark:focus-within:bg-header">
+              <Search className="w-4 h-4 mr-2 text-slate-400 dark:text-text-muted" />
+              <input type="text" placeholder="Search trips, places..." className="bg-transparent border-none outline-none w-full text-text-primary placeholder:text-slate-500 dark:placeholder:text-text-muted" />
+              <span className="text-xs bg-slate-200 dark:bg-border px-1.5 rounded ml-2 text-slate-500 dark:text-text-secondary">⌘K</span>
             </div>
           </div>
           

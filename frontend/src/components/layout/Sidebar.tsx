@@ -31,12 +31,12 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
   }, [setIsOpen]);
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 w-64 p-4 transition-all duration-300">
+    <div className="flex flex-col h-full bg-white dark:bg-sidebar border-r border-slate-200 dark:border-border w-64 p-4 transition-all duration-300">
       <div className="flex items-center justify-between mb-8 px-2">
         <Link to="/dashboard" className="font-bold text-xl text-primary-600 flex items-center gap-2">
           <span className="text-2xl">✈️</span> TripWise
         </Link>
-        <button className="md:hidden text-slate-500" onClick={() => setIsOpen(false)}>
+        <button className="md:hidden text-slate-500 dark:text-text-muted" onClick={() => setIsOpen(false)}>
           <X className="w-6 h-6" />
         </button>
       </div>
@@ -49,10 +49,10 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
               key={item.path}
               to={item.path}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors group",
                 isActive 
-                  ? "bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400" 
-                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
+                  ? "bg-primary-50 text-primary-700 dark:bg-[#312E81] dark:text-white [&>svg]:text-primary-600 dark:[&>svg]:text-[#818CF8]" 
+                  : "text-slate-600 dark:text-[#94A3B8] hover:bg-slate-50 dark:hover:bg-surface-hover hover:text-slate-900 dark:hover:text-text-primary"
               )}
             >
               {item.icon}
@@ -62,12 +62,12 @@ export default function Sidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsO
         })}
       </nav>
 
-      <div className="mt-auto space-y-1 pt-4 border-t border-slate-200 dark:border-slate-800">
+      <div className="mt-auto space-y-1 pt-4 border-t border-slate-200 dark:border-border">
         {bottomItems.map((item) => (
           <Link
             key={item.path}
             to={item.path}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 dark:text-[#94A3B8] hover:bg-slate-50 dark:hover:bg-surface-hover hover:text-slate-900 dark:hover:text-text-primary transition-colors"
           >
             {item.icon}
             {item.label}
