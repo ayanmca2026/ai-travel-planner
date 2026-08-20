@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 let rawApiUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://ai-travel-planner-olui.onrender.com' : 'http://localhost:8000');
-if (rawApiUrl.endsWith('/')) rawApiUrl = rawApiUrl.slice(0, -1);
-if (!rawApiUrl.endsWith('/api')) rawApiUrl += '/api';
+rawApiUrl = rawApiUrl.replace(/\/+$/, '');
+rawApiUrl = rawApiUrl.replace(/\/api$/, '');
+rawApiUrl = rawApiUrl + '/api';
 
 const api = axios.create({
   baseURL: rawApiUrl,

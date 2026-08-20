@@ -11,7 +11,7 @@ services:
       - key: PYTHONPATH
         value: /opt/render/project/src
       - key: SECRET_KEY
-        value: b29a7c3f8e4d156a9b4d8c7e2f1a3b5c6d9e8f7a4b1c2d3e5f6a7b8c9d0e1f2
+        generateValue: true
       - key: CORS_ORIGINS
         value: https://ai-travel-planner-puce-three.vercel.app,http://localhost:5173
       - key: ENVIRONMENT

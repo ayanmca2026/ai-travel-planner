@@ -47,3 +47,16 @@ app.include_router(assistant.router, prefix="/api/trips", tags=["AI"])
 app.include_router(budget.router, prefix="/api/trips", tags=["Budget"])
 app.include_router(maps.router, prefix="/api/places", tags=["Places"])
 app.include_router(sharing.router, prefix="/api/share", tags=["Share"])
+
+@app.get("/")
+async def root():
+    return {
+        "name": "TripWise AI API",
+        "description": "AI-powered student travel planning backend",
+        "status": "online",
+        "version": "1.0.0",
+        "frontend": "https://ai-travel-planner-puce-three.vercel.app",
+        "health": "/api/health",
+        "docs": "/docs",
+        "redoc": "/redoc",
+    }
