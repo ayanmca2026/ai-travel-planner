@@ -29,7 +29,10 @@ class AuthService:
             await db.refresh(user)
         except Exception as e:
             await db.rollback()
-            raise AppException("Database error occurred while creating account", status_code=500)
+            import traceback
+            print(f"[REGISTRATION ERROR] {type(e).__name__}: {e}")
+            traceback.print_exc()
+            raise AppException(f"Database error: {type(e).__name__}: {str(e)}", status_code=500)
         
         access_token = create_access_token(user.id)
         refresh_token = create_refresh_token(user.id)
